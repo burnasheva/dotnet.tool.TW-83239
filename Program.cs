@@ -1,15 +1,17 @@
-﻿using System.IO.Compression;
+﻿using System;
+using System.IO;
+using System.IO.Compression;
 
 namespace dotnet.tool;
 
 internal class Program
 {
-    
     static void Main(string[] args)
     {
-        Unzip("./", "/Users/dmitrii.tsygankov/Downloads/arch1.zip");
+        //Unzip("./", "/Users/burnasheva/Downloads/archive.zip");
+        Unzip("./", "/Users/burnasheva/Downloads/archive_202305.zip");
     }
-    
+
     static void Unzip(string dest, string zipPath)
     {
         using (var archive = ZipFile.OpenRead(zipPath))
@@ -19,10 +21,10 @@ internal class Program
                 var entryDestinationPath = Path.Combine(dest, archiveEntry.FullName);
                 var canonicalEntryDestinationPath = Path.GetFullPath(entryDestinationPath);
 
-                if (canonicalEntryDestinationPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-                    throw new PathException($"Invalid file path (ends with slash): '{canonicalEntryDestinationPath}'");
+                if (canonicalEntryDestinationPath.EndsWith(Path.DirectorySeparatorChar.ToString(),
+                        StringComparison.Ordinal))
+                    throw new Exception($"Invalid file path (ends with slash): '{canonicalEntryDestinationPath}'");
                 archiveEntry.ExtractToFile(canonicalEntryDestinationPath);
             }
     }
-
 }
